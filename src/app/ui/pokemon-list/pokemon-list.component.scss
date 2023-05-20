@@ -1,0 +1,11 @@
+:host {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  row-gap: 16px;
+  column-gap: 16px;
+  padding: 16px;
+}
+
+.pokemon-list__pokemon-card:hover {
+  cursor: pointer;
+}

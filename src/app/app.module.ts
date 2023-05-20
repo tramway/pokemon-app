@@ -12,6 +12,8 @@ import { HttpPokemonService } from './infrastructure/http-pokemon.service';
 import { PokemonService } from './domain/pokemon.service';
 import { PokemonListComponent } from './ui/pokemon-list/pokemon-list.component';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatCardModule } from '@angular/material/card';
+import { MatRippleModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,9 @@ import { MatGridListModule } from '@angular/material/grid-list';
         deps: [HttpClient]
       }
     }),
-    MatGridListModule
+    MatGridListModule,
+    MatCardModule,
+    MatRippleModule
   ],
   providers: [
     { provide: PokemonService, useClass: HttpPokemonService }

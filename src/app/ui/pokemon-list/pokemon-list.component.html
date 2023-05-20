@@ -1,5 +1,5 @@
-<mat-grid-list cols="2" rowHeight="2:1">
-  <mat-grid-tile *ngFor="let pokemon of pokemons$ | async">
+<mat-card mat-ripple *ngFor="let pokemon of pokemons$ | async" class="pokemon-list__pokemon-card">
+  <mat-card-content>
     <div class="pokemon-list__pokemon">{{pokemon.name}}</div>
-  </mat-grid-tile>
-</mat-grid-list>
+  </mat-card-content>
+</mat-card>
