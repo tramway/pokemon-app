@@ -1,9 +1,13 @@
 import { Injectable } from '@angular/core';
 import { PokemonService } from '../domain/pokemon.service';
-import { Pokemon } from '../domain/pokemon';
-import { map, Observable } from 'rxjs';
+import { forkJoin, map, Observable, switchMap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { HttpResponse } from './http-response';
+import { Pokemon } from '../domain/pokemon';
+
+interface PokemonDetailsResponse {
+  sprites: { front_default: string };
+}
 
 @Injectable({
   providedIn: 'root'
@@ -15,12 +19,20 @@ export class HttpPokemonService extends PokemonService {
     super();
   }
 
+  // TODO make it cleaner
   public get(): Observable<Pokemon[]> {
-    return this.httpClient.get<HttpResponse>('https://pokeapi.co/api/v2/pokemon?limit=20&offset=20').pipe(
-      map((rawPokemons: HttpResponse) => rawPokemons.results.map(rawPokemon => ({
-        id: rawPokemon.id,
-        name: rawPokemon.name
-      })))
-    );
+    return this.httpClient.get<HttpResponse>('https://pokeapi.co/api/v2/pokemon?limit=20&offset=0')
+      .pipe(
+        switchMap((rawPokemons: HttpResponse) => {
+          const pokemonDetailsRequests = rawPokemons.results.map(
+            rawPokemon => this.httpClient.get<PokemonDetailsResponse>(rawPokemon.url)
+              .pipe(map(rawDetails => ({
+                url: rawPokemon.url,
+                name: rawPokemon.name,
+                image: rawDetails.sprites.front_default
+              }))));
+          return forkJoin(pokemonDetailsRequests);
+        })
+      );
   }
 }

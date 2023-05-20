@@ -1,5 +1,6 @@
 <mat-card mat-ripple *ngFor="let pokemon of pokemons$ | async" class="pokemon-list__pokemon-card">
-  <mat-card-content>
-    <div class="pokemon-list__pokemon">{{pokemon.name}}</div>
+  <mat-card-content class="pokemon-list__pokemon-card-content">
+    <img src="{{pokemon.image}}" class="pokemon-list__pokemon-image"/>
+    <div class="pokemon-list__pokemon">{{pokemon.name | titlecase}}</div>
   </mat-card-content>
 </mat-card>
