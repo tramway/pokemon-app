@@ -8,10 +8,15 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpPokemonService } from './infrastructure/http-pokemon.service';
+import { PokemonService } from './domain/pokemon.service';
+import { PokemonListComponent } from './ui/pokemon-list/pokemon-list.component';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    PokemonListComponent
   ],
   imports: [
     BrowserModule,
@@ -25,9 +30,12 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
         useFactory: (http: HttpClient) => new TranslateHttpLoader(http),
         deps: [HttpClient]
       }
-    })
+    }),
+    MatGridListModule
   ],
-  providers: [],
+  providers: [
+    { provide: PokemonService, useClass: HttpPokemonService }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
