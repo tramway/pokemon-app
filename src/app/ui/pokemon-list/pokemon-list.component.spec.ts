@@ -6,6 +6,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { PokemonService } from '../../domain/pokemon.service';
 import { InMemoryPokemonService } from '../../infrastructure/in-memory-pokemon.service';
 import { MatCardModule } from '@angular/material/card';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('PokemonListComponent', () => {
   let component: PokemonListComponent;
@@ -14,7 +16,7 @@ describe('PokemonListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatGridListModule, MatCardModule],
+      imports: [MatGridListModule, MatCardModule, MatToolbarModule, TranslateModule.forRoot()],
       declarations: [PokemonListComponent],
       providers: [{
         provide: PokemonService, useFactory: () => new InMemoryPokemonService([
@@ -37,12 +39,17 @@ describe('PokemonListComponent', () => {
     fixture.detectChanges();
   });
 
-  it('displays fetched pokemon', (done) => {
+  it('displays header', () => {
+    expect(fixture.debugElement.query(By.css('.pokemon-list__header'))).toBeTruthy();
+  });
+
+  it('displays fetched pokemons', (done) => {
     pokemonsService.get().subscribe((pokemons) => {
       const pokemonsNames = fixture.debugElement.queryAll(By.css('.pokemon-list__pokemon')).map(element => element.nativeElement.innerText.toLowerCase());
       expect(pokemonsNames).toEqual(pokemons.map(pokemon => pokemon.name));
       const pokemonImages = fixture.debugElement.queryAll(By.css('.pokemon-list__pokemon-image')).map(image => image.nativeElement.src);
       expect(pokemonImages).toEqual(pokemons.map(pokemon => pokemon.image));
+
       done();
     });
   });
