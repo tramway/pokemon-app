@@ -9,6 +9,8 @@ import { MatRippleModule } from '@angular/material/core';
 import { PokemonListComponent } from './pokemon-list.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { pokemonListDataResolverKey, pokemonListQueryParamsResolver } from './pokemon-list-data-resolver';
 
 @NgModule({
   imports: [
@@ -17,13 +19,18 @@ import { RouterModule } from '@angular/router';
     RouterModule.forChild([
       {
         path: '',
-        component: PokemonListComponent
+        component: PokemonListComponent,
+        resolve: {
+          [pokemonListDataResolverKey]: pokemonListQueryParamsResolver
+        },
+        runGuardsAndResolvers: 'pathParamsOrQueryParamsChange'
       }
     ]),
     MatToolbarModule,
     MatGridListModule,
     MatCardModule,
-    MatRippleModule
+    MatRippleModule,
+    MatPaginatorModule
   ],
   declarations: [PokemonListComponent],
   providers: [

@@ -10,3 +10,11 @@
     </mat-card-content>
   </mat-card>
 </section>
+
+<mat-paginator
+  [length]="100"
+  [pageSize]="10"
+  (page)="changePage($event)"
+  aria-label="Select page"
+>
+</mat-paginator>

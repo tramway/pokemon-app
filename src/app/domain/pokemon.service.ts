@@ -3,6 +3,6 @@ import { Observable } from 'rxjs';
 
 export abstract class PokemonService {
 
-  abstract get(): Observable<Array<Pokemon>>;
+  abstract get(page: number): Observable<Array<Pokemon>>;
 
 }

@@ -20,8 +20,8 @@ export class HttpPokemonService extends PokemonService {
   }
 
   // TODO make it cleaner
-  public get(): Observable<Pokemon[]> {
-    return this.httpClient.get<HttpResponse>('https://pokeapi.co/api/v2/pokemon?limit=20&offset=0')
+  public get(page: number): Observable<Pokemon[]> {
+    return this.httpClient.get<HttpResponse>(`https://pokeapi.co/api/v2/pokemon?limit=10&offset=${ page * 10 }`)
       .pipe(
         switchMap((rawPokemons: HttpResponse) => {
           const pokemonDetailsRequests = rawPokemons.results.map(

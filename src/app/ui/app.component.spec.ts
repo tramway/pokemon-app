@@ -18,10 +18,9 @@ describe('AppComponent', () => {
       declarations: [AppComponent],
     }).compileComponents();
 
-    const router = TestBed.inject(Router);
     fixture = TestBed.createComponent(AppComponent);
 
-    await router.navigate(['/']);
+    await TestBed.inject(Router).navigate(['/']);
     fixture.detectChanges();
   });
 

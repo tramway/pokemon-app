@@ -2,55 +2,74 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PokemonListComponent } from './pokemon-list.component';
 import { By } from '@angular/platform-browser';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { PokemonService } from '../../domain/pokemon.service';
 import { InMemoryPokemonService } from '../../infrastructure/in-memory-pokemon.service';
-import { MatCardModule } from '@angular/material/card';
-import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatPaginator } from '@angular/material/paginator';
+import { PokemonListModule } from './pokemon-list.module';
 import { TranslateModule } from '@ngx-translate/core';
+import { BrowserTestingModule } from '@angular/platform-browser/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Pokemon } from '../../domain/pokemon';
+import { ActivatedRoute } from '@angular/router';
+import { of } from 'rxjs';
+import { PokemonListResolvedData } from './pokemon-list-data-resolver';
 
 describe('PokemonListComponent', () => {
-  let component: PokemonListComponent;
   let fixture: ComponentFixture<PokemonListComponent>;
-  let pokemonsService: PokemonService;
+  let activatedRoute: ActivatedRoute;
+  let mockedPokemons: Pokemon[];
 
   beforeEach(async () => {
+    mockedPokemons = [
+      {
+        name: 'bulbasaur',
+        url: 'https://pokeapi.co/api/v2/pokemon/1/',
+        image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'
+      },
+      {
+        name: 'pikachu',
+        url: 'https://pokeapi.co/api/v2/pokemon/25/',
+        image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png'
+      },
+    ];
+
     await TestBed.configureTestingModule({
-      imports: [MatGridListModule, MatCardModule, MatToolbarModule, TranslateModule.forRoot()],
+      imports: [TranslateModule.forRoot(), PokemonListModule, BrowserTestingModule, RouterTestingModule],
       declarations: [PokemonListComponent],
-      providers: [{
-        provide: PokemonService, useFactory: () => new InMemoryPokemonService([
-          {
-            name: 'bulbasaur',
-            url: 'https://pokeapi.co/api/v2/pokemon/1/',
-            image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'
-          },
-          {
-            name: 'pikachu',
-            url: 'https://pokeapi.co/api/v2/pokemon/25/',
-            image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png'
-          },
-        ])
-      }]
+      providers: [
+        { provide: PokemonService, useFactory: () => new InMemoryPokemonService(mockedPokemons) },
+      ]
     }).compileComponents();
+
     fixture = TestBed.createComponent(PokemonListComponent);
-    component = fixture.componentInstance;
-    pokemonsService = TestBed.inject(PokemonService);
-    fixture.detectChanges();
+    activatedRoute = TestBed.inject(ActivatedRoute);
   });
 
   it('displays header', () => {
+    fixture.detectChanges();
+
     expect(fixture.debugElement.query(By.css('.pokemon-list__header'))).toBeTruthy();
   });
 
-  it('displays fetched pokemons', (done) => {
-    pokemonsService.get().subscribe((pokemons) => {
-      const pokemonsNames = fixture.debugElement.queryAll(By.css('.pokemon-list__pokemon')).map(element => element.nativeElement.innerText.toLowerCase());
-      expect(pokemonsNames).toEqual(pokemons.map(pokemon => pokemon.name));
-      const pokemonImages = fixture.debugElement.queryAll(By.css('.pokemon-list__pokemon-image')).map(image => image.nativeElement.src);
-      expect(pokemonImages).toEqual(pokemons.map(pokemon => pokemon.image));
+  it('displays paginator', () => {
+    fixture.detectChanges();
 
-      done();
+    const paginator = fixture.debugElement.query(By.directive(MatPaginator)).componentInstance as MatPaginator;
+    expect(paginator.pageSize).toBe(10);
+  });
+
+  it('displays fetched pokemons names and images', () => {
+    const data: PokemonListResolvedData = { pokemonList: { page: 1 } };
+    activatedRoute.data = of(data);
+
+    fixture.detectChanges();
+
+    fixture.debugElement.queryAll(By.css('.pokemon-list__pokemon')).forEach((element, index) => {
+      expect(element.nativeElement.innerText.toLowerCase()).toEqual(mockedPokemons[index].name);
+    });
+
+    fixture.debugElement.queryAll(By.css('.pokemon-list__pokemon-image')).forEach((image, index) => {
+      expect(image.nativeElement.src).toEqual(mockedPokemons[index].image);
     });
   });
 });
