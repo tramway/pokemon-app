@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { PokemonService } from '../../domain/pokemon.service';
-import { Observable, of } from 'rxjs';
+import { filter, Observable, of, switchMap, tap } from 'rxjs';
 import { Pokemon } from '../../domain/pokemon';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PokemonListResolvedData } from './pokemon-list-data-resolver';
 
 @Component({
   selector: 'app-pokemon-list',
@@ -23,11 +22,25 @@ export class PokemonListComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.activatedRoute.data.subscribe((data) => {
-      const typedData: PokemonListResolvedData = data as PokemonListResolvedData;
-
-      this.pokemons$ = this.pokemonService.get(typedData.pokemonList.page);
-    });
+    this.pokemons$ = this.activatedRoute.queryParams
+      .pipe(
+        tap(queryParams => {
+          if (queryParams['page']) {
+            return;
+          }
+          this.router.navigate(
+            [],
+            {
+              relativeTo: this.activatedRoute,
+              queryParams: { page: 1 },
+              queryParamsHandling: 'merge',
+            }
+          );
+        }),
+        filter(queryParams => queryParams['page']),
+        // Here should go some validation of queryParam.page to be Number
+        switchMap(queryParams => this.pokemonService.get(queryParams['page']))
+      );
   }
 
   public changePage($event: PageEvent): void {

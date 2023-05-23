@@ -10,14 +10,18 @@ import { TranslateModule } from '@ngx-translate/core';
 import { BrowserTestingModule } from '@angular/platform-browser/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Pokemon } from '../../domain/pokemon';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { PokemonListResolvedData } from './pokemon-list-data-resolver';
+import { NgZone } from '@angular/core';
 
 describe('PokemonListComponent', () => {
   let fixture: ComponentFixture<PokemonListComponent>;
   let activatedRoute: ActivatedRoute;
+  let router: Router;
   let mockedPokemons: Pokemon[];
+  let ngZone: NgZone;
+  let pokemonService: PokemonService;
 
   beforeEach(async () => {
     mockedPokemons = [
@@ -34,7 +38,12 @@ describe('PokemonListComponent', () => {
     ];
 
     await TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot(), PokemonListModule, BrowserTestingModule, RouterTestingModule],
+      imports: [TranslateModule.forRoot(), PokemonListModule, BrowserTestingModule, RouterTestingModule.withRoutes([
+        {
+          path: '',
+          component: PokemonListComponent
+        }
+      ])],
       declarations: [PokemonListComponent],
       providers: [
         { provide: PokemonService, useFactory: () => new InMemoryPokemonService(mockedPokemons) },
@@ -43,9 +52,26 @@ describe('PokemonListComponent', () => {
 
     fixture = TestBed.createComponent(PokemonListComponent);
     activatedRoute = TestBed.inject(ActivatedRoute);
+    router = TestBed.inject(Router);
+    ngZone = TestBed.inject(NgZone);
+    pokemonService = TestBed.inject(PokemonService);
+
+    spyOn(pokemonService, 'get').and.callThrough();
+    spyOn(router, 'navigate').and.callThrough();
+  });
+
+  it('sets initial queryParams to default ones if not presented', async () => {
+    await ngZone.run(async () => await router.navigate(['/']));
+
+    fixture.detectChanges();
+
+    expect(router.navigate).toHaveBeenCalledWith([], jasmine.objectContaining({ queryParams: { page: 1 } }));
   });
 
   it('displays header', () => {
+    const data: PokemonListResolvedData = { pokemonList: { page: 1 } };
+    activatedRoute.data = of(data);
+
     fixture.detectChanges();
 
     expect(fixture.debugElement.query(By.css('.pokemon-list__header'))).toBeTruthy();
@@ -58,9 +84,8 @@ describe('PokemonListComponent', () => {
     expect(paginator.pageSize).toBe(10);
   });
 
-  it('displays fetched pokemons names and images', () => {
-    const data: PokemonListResolvedData = { pokemonList: { page: 1 } };
-    activatedRoute.data = of(data);
+  it('displays fetched pokemons names and images', async () => {
+    await ngZone.run(async () => await router.navigate(['/'], { queryParams: { page: '1' } }));
 
     fixture.detectChanges();
 

@@ -10,7 +10,6 @@ import { PokemonListComponent } from './pokemon-list.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { pokemonListDataResolverKey, pokemonListQueryParamsResolver } from './pokemon-list-data-resolver';
 
 @NgModule({
   imports: [
@@ -20,10 +19,6 @@ import { pokemonListDataResolverKey, pokemonListQueryParamsResolver } from './po
       {
         path: '',
         component: PokemonListComponent,
-        resolve: {
-          [pokemonListDataResolverKey]: pokemonListQueryParamsResolver
-        },
-        runGuardsAndResolvers: 'pathParamsOrQueryParamsChange'
       }
     ]),
     MatToolbarModule,
