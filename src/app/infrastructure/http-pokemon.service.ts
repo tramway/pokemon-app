@@ -6,6 +6,7 @@ import { HttpResponse } from './http-response';
 import { Pokemon } from '../domain/pokemon';
 
 interface PokemonDetailsResponse {
+  id: number;
   sprites: { front_default: string };
 }
 
@@ -27,6 +28,7 @@ export class HttpPokemonService extends PokemonService {
           const pokemonDetailsRequests = rawPokemons.results.map(
             rawPokemon => this.httpClient.get<PokemonDetailsResponse>(rawPokemon.url)
               .pipe(map(rawDetails => ({
+                id: rawDetails.id,
                 url: rawPokemon.url,
                 name: rawPokemon.name,
                 image: rawDetails.sprites.front_default

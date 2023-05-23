@@ -11,9 +11,8 @@ import { BrowserTestingModule } from '@angular/platform-browser/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Pokemon } from '../../domain/pokemon';
 import { ActivatedRoute, Router } from '@angular/router';
-import { of } from 'rxjs';
-import { PokemonListResolvedData } from './pokemon-list-data-resolver';
 import { NgZone } from '@angular/core';
+import Spy = jasmine.Spy;
 
 describe('PokemonListComponent', () => {
   let fixture: ComponentFixture<PokemonListComponent>;
@@ -21,16 +20,18 @@ describe('PokemonListComponent', () => {
   let router: Router;
   let mockedPokemons: Pokemon[];
   let ngZone: NgZone;
-  let pokemonService: PokemonService;
+  let routerNavigateSpy: Spy<Router['navigate']>;
 
   beforeEach(async () => {
     mockedPokemons = [
       {
+        id: 1,
         name: 'bulbasaur',
         url: 'https://pokeapi.co/api/v2/pokemon/1/',
         image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'
       },
       {
+        id: 25,
         name: 'pikachu',
         url: 'https://pokeapi.co/api/v2/pokemon/25/',
         image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png'
@@ -54,10 +55,10 @@ describe('PokemonListComponent', () => {
     activatedRoute = TestBed.inject(ActivatedRoute);
     router = TestBed.inject(Router);
     ngZone = TestBed.inject(NgZone);
-    pokemonService = TestBed.inject(PokemonService);
+    const pokemonService = TestBed.inject(PokemonService);
 
     spyOn(pokemonService, 'get').and.callThrough();
-    spyOn(router, 'navigate').and.callThrough();
+    routerNavigateSpy = spyOn(router, 'navigate').and.callThrough();
   });
 
   it('sets initial queryParams to default ones if not presented', async () => {
@@ -68,9 +69,8 @@ describe('PokemonListComponent', () => {
     expect(router.navigate).toHaveBeenCalledWith([], jasmine.objectContaining({ queryParams: { page: 1 } }));
   });
 
-  it('displays header', () => {
-    const data: PokemonListResolvedData = { pokemonList: { page: 1 } };
-    activatedRoute.data = of(data);
+  it('displays header', async () => {
+    await ngZone.run(async () => await router.navigate(['/'], { queryParams: { page: '1' } }));
 
     fixture.detectChanges();
 
@@ -96,5 +96,16 @@ describe('PokemonListComponent', () => {
     fixture.debugElement.queryAll(By.css('.pokemon-list__pokemon-image')).forEach((image, index) => {
       expect(image.nativeElement.src).toEqual(mockedPokemons[index].image);
     });
+  });
+
+  it('clicking pokemon opens pokemon details', async () => {
+    await ngZone.run(async () => await router.navigate(['/'], { queryParams: { page: '1' } }));
+
+    fixture.detectChanges();
+
+    routerNavigateSpy.calls.reset();
+    fixture.debugElement.queryAll(By.css('.pokemon-list__pokemon-card-content')).at(0)?.nativeElement.click();
+
+    expect(router.navigate).toHaveBeenCalledWith(['details', 1]);
   });
 });

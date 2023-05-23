@@ -23,11 +23,13 @@ describe('HttpPokemonService', () => {
     service.get(1).subscribe(pokemons => {
       const expected: Pokemon[] = [
         {
+          id: 1,
           name: 'bulbasaur',
           url: 'https://pokeapi.co/api/v2/pokemon/1/',
           image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'
         },
         {
+          id: 25,
           name: 'pikachu',
           url: 'https://pokeapi.co/api/v2/pokemon/25/',
           image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png'

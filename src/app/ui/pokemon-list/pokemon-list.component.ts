@@ -52,4 +52,8 @@ export class PokemonListComponent implements OnInit {
         queryParamsHandling: 'merge',
       });
   }
+
+  public openDetails(pokemon: Pokemon): void {
+    this.router.navigate(['details', pokemon.id]);
+  }
 }
