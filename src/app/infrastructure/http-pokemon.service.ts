@@ -7,6 +7,7 @@ import { Pokemon } from '../domain/pokemon';
 
 interface PokemonDetailsResponse {
   id: number;
+  name: string;
   sprites: { front_default: string };
 }
 
@@ -21,7 +22,7 @@ export class HttpPokemonService extends PokemonService {
   }
 
   // TODO make it cleaner
-  public get(page: number): Observable<Pokemon[]> {
+  public getPokemons(page: number): Observable<Pokemon[]> {
     return this.httpClient.get<HttpResponse>(`https://pokeapi.co/api/v2/pokemon?limit=10&offset=${ page * 10 }`)
       .pipe(
         switchMap((rawPokemons: HttpResponse) => {
@@ -36,5 +37,15 @@ export class HttpPokemonService extends PokemonService {
           return forkJoin(pokemonDetailsRequests);
         })
       );
+  }
+
+  public getPokemon(id: Pokemon['id']): Observable<Pokemon | undefined> {
+    return this.httpClient.get<PokemonDetailsResponse>(`https://pokeapi.co/api/v2/pokemon/${ id }`)
+      .pipe(map(rawDetails => ({
+        id: rawDetails.id,
+        url: `https://pokeapi.co/api/v2/pokemon/${ id }`,
+        name: rawDetails.name,
+        image: rawDetails.sprites.front_default
+      })));
   }
 }

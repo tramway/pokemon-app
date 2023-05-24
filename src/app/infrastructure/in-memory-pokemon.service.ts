@@ -14,7 +14,11 @@ export class InMemoryPokemonService extends PokemonService {
     this.pokemons = pokemons;
   }
 
-  public get(): Observable<Pokemon[]> {
+  public getPokemons(): Observable<Pokemon[]> {
     return of(this.pokemons);
+  }
+
+  public getPokemon(id: Pokemon['id']): Observable<Pokemon | undefined> {
+    return of(this.pokemons.find(pokemon => pokemon.id === id));
   }
 }

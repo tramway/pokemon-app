@@ -4,11 +4,12 @@ import { filter, Observable, of, switchMap, tap } from 'rxjs';
 import { Pokemon } from '../../domain/pokemon';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SelectedPokemonService } from './selected-pokemon.service';
 
 @Component({
   selector: 'app-pokemon-list',
   templateUrl: './pokemon-list.component.html',
-  styleUrls: ['./pokemon-list.component.scss']
+  styleUrls: ['./pokemon-list.component.scss'],
 })
 export class PokemonListComponent implements OnInit {
 
@@ -17,7 +18,8 @@ export class PokemonListComponent implements OnInit {
   constructor(
     private pokemonService: PokemonService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private selectedPokemonService: SelectedPokemonService
   ) {
   }
 
@@ -39,7 +41,7 @@ export class PokemonListComponent implements OnInit {
         }),
         filter(queryParams => queryParams['page']),
         // Here should go some validation of queryParam.page to be Number
-        switchMap(queryParams => this.pokemonService.get(queryParams['page']))
+        switchMap(queryParams => this.pokemonService.getPokemons(queryParams['page']))
       );
   }
 
@@ -54,6 +56,10 @@ export class PokemonListComponent implements OnInit {
   }
 
   public openDetails(pokemon: Pokemon): void {
-    this.router.navigate(['details', pokemon.id]);
+    this.selectedPokemonService.selectPokemon(pokemon);
+    this.router.navigate(['details', pokemon.id], {
+      relativeTo: this.activatedRoute,
+      queryParamsHandling: 'preserve',
+    });
   }
 }

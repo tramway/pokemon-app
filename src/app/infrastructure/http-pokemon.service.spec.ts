@@ -20,7 +20,7 @@ describe('HttpPokemonService', () => {
   });
 
   it('should fetch list of pokemons and details', (done) => {
-    service.get(1).subscribe(pokemons => {
+    service.getPokemons(1).subscribe(pokemons => {
       const expected: Pokemon[] = [
         {
           id: 1,

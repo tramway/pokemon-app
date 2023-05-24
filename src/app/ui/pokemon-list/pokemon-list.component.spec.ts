@@ -12,6 +12,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Pokemon } from '../../domain/pokemon';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgZone } from '@angular/core';
+import { SelectedPokemonService } from './selected-pokemon.service';
 import Spy = jasmine.Spy;
 
 describe('PokemonListComponent', () => {
@@ -21,6 +22,7 @@ describe('PokemonListComponent', () => {
   let mockedPokemons: Pokemon[];
   let ngZone: NgZone;
   let routerNavigateSpy: Spy<Router['navigate']>;
+  let selectedPokemonService: SelectedPokemonService;
 
   beforeEach(async () => {
     mockedPokemons = [
@@ -48,6 +50,7 @@ describe('PokemonListComponent', () => {
       declarations: [PokemonListComponent],
       providers: [
         { provide: PokemonService, useFactory: () => new InMemoryPokemonService(mockedPokemons) },
+        SelectedPokemonService,
       ]
     }).compileComponents();
 
@@ -55,9 +58,12 @@ describe('PokemonListComponent', () => {
     activatedRoute = TestBed.inject(ActivatedRoute);
     router = TestBed.inject(Router);
     ngZone = TestBed.inject(NgZone);
+    selectedPokemonService = TestBed.inject(SelectedPokemonService);
     const pokemonService = TestBed.inject(PokemonService);
 
-    spyOn(pokemonService, 'get').and.callThrough();
+    spyOn(selectedPokemonService, 'selectPokemon').and.callThrough();
+    spyOn(pokemonService, 'getPokemons').and.callThrough();
+
     routerNavigateSpy = spyOn(router, 'navigate').and.callThrough();
   });
 
@@ -106,6 +112,7 @@ describe('PokemonListComponent', () => {
     routerNavigateSpy.calls.reset();
     fixture.debugElement.queryAll(By.css('.pokemon-list__pokemon-card-content')).at(0)?.nativeElement.click();
 
-    expect(router.navigate).toHaveBeenCalledWith(['details', 1]);
+    expect(router.navigate).toHaveBeenCalledWith(['details', 1], jasmine.anything());
+    expect(selectedPokemonService.selectPokemon).toHaveBeenCalledWith(mockedPokemons[0]);
   });
 });

@@ -10,6 +10,8 @@ import { PokemonListComponent } from './pokemon-list.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { PokemonDetailsComponent } from './pokemon-details/pokemon-details.component';
+import { SelectedPokemonService } from './selected-pokemon.service';
 
 @NgModule({
   imports: [
@@ -19,6 +21,10 @@ import { MatPaginatorModule } from '@angular/material/paginator';
       {
         path: '',
         component: PokemonListComponent,
+      },
+      {
+        path: 'details/:id',
+        component: PokemonDetailsComponent
       }
     ]),
     MatToolbarModule,
@@ -27,8 +33,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatRippleModule,
     MatPaginatorModule
   ],
-  declarations: [PokemonListComponent],
+  declarations: [PokemonListComponent, PokemonDetailsComponent],
   providers: [
+    SelectedPokemonService,
     { provide: PokemonService, useClass: HttpPokemonService }
   ]
 })

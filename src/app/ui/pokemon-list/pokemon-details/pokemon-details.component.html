@@ -1,0 +1,4 @@
+<ng-container *ngIf="(pokemon$ | async) as pokemon">
+  <img class="pokemon-details__image" src="{{pokemon.image}}"/>
+  <div class="pokemon-details__name">{{pokemon.name | titlecase}}</div>
+</ng-container>
