@@ -1,4 +1,19 @@
-<ng-container *ngIf="(pokemon$ | async) as pokemon">
-  <img class="pokemon-details__image" src="{{pokemon.image}}"/>
-  <div class="pokemon-details__name">{{pokemon.name | titlecase}}</div>
-</ng-container>
+<section class="pokemon-details__container">
+  <mat-card *ngIf="(pokemon$ | async) as pokemon" class="pokemon-details__pokemon-main-info-card">
+    <mat-card-content class="pokemon-details__pokemon-card-content">
+      <b class="pokemon-details__name">{{pokemon.name | titlecase}}</b>
+      <img class="pokemon-details__image" src="{{pokemon.image}}"/>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card *ngIf="(pokemon$ | async) as pokemon" class="pokemon-details__pokemon-abilities-card">
+    <mat-card-content class="pokemon-details__pokemon-card-content">
+      <b class="pokemon-details__name">{{'ABILITIES' | titlecase}}</b>
+      <ul>
+        <li *ngFor="let ability of pokemon.abilitiesNames">{{ability}}</li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+
+</section>
+<button mat-raised-button class="pokemon-details__go-back" (click)="goBack()">{{'GO_BACK' | translate}}</button>

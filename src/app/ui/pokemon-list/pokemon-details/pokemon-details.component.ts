@@ -3,7 +3,7 @@ import { Pokemon } from '../../../domain/pokemon';
 import { Observable, race } from 'rxjs';
 import { SelectedPokemonService } from '../selected-pokemon.service';
 import { PokemonService } from '../../../domain/pokemon.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-pokemon-details',
@@ -17,6 +17,7 @@ export class PokemonDetailsComponent implements OnInit {
   constructor(
     private selectedPokemonService: SelectedPokemonService,
     private pokemonService: PokemonService,
+    private router: Router,
     private activatedRoute: ActivatedRoute
   ) {
   }
@@ -26,5 +27,9 @@ export class PokemonDetailsComponent implements OnInit {
       this.selectedPokemonService.getPokemon(),
       this.pokemonService.getPokemon(Number(this.activatedRoute.snapshot.params['id']))
     ]);
+  }
+
+  public goBack(): void {
+    this.router.navigate(['../'], { queryParamsHandling: 'preserve' });
   }
 }

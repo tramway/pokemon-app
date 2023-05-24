@@ -8,18 +8,21 @@ import { SelectedPokemonService } from '../selected-pokemon.service';
 import { PokemonService } from '../../../domain/pokemon.service';
 import { InMemoryPokemonService } from '../../../infrastructure/in-memory-pokemon.service';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { MatCardModule } from '@angular/material/card';
 
 describe('PokemonDetailsComponent', () => {
   let fixture: ComponentFixture<PokemonDetailsComponent>;
   let selectedPokemonService: SelectedPokemonService;
   let pokemonService: PokemonService;
   let pokemon: Pokemon;
+  let router: Router;
   let activatedRoute: ActivatedRoute;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BrowserTestingModule, RouterTestingModule],
+      imports: [BrowserTestingModule, RouterTestingModule, TranslateModule.forRoot(), MatCardModule],
       declarations: [PokemonDetailsComponent],
       providers: [
         SelectedPokemonService,
@@ -29,10 +32,12 @@ describe('PokemonDetailsComponent', () => {
 
     selectedPokemonService = TestBed.inject(SelectedPokemonService);
     pokemonService = TestBed.inject(PokemonService);
+    router = TestBed.inject(Router);
     activatedRoute = TestBed.inject(ActivatedRoute);
 
-    fixture = TestBed.createComponent(PokemonDetailsComponent);
+    spyOn(router, 'navigate');
 
+    fixture = TestBed.createComponent(PokemonDetailsComponent);
   });
 
   it('reads pokemon data SelectedPokemonService', () => {
@@ -40,7 +45,8 @@ describe('PokemonDetailsComponent', () => {
       id: 1,
       name: 'bulbasaur',
       url: 'https://pokeapi.co/api/v2/pokemon/1/',
-      image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'
+      image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png',
+      abilitiesNames: ['bulbasaursAbility']
     };
     selectedPokemonService.selectPokemon(pokemon);
 
@@ -55,7 +61,8 @@ describe('PokemonDetailsComponent', () => {
       id: 2,
       name: 'pikachu',
       url: 'https://pokeapi.co/api/v2/pokemon/2/',
-      image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png'
+      image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png',
+      abilitiesNames: ['pickachusAbility']
     };
 
     spyOn(pokemonService, 'getPokemon').and.callFake((id: number) => new InMemoryPokemonService([pokemon]).getPokemon(id));
@@ -65,5 +72,13 @@ describe('PokemonDetailsComponent', () => {
 
     expect(fixture.debugElement.query(By.css('.pokemon-details__name')).nativeElement.innerText.toLowerCase()).toBe(pokemon.name.toLowerCase());
     expect(fixture.debugElement.query(By.css('.pokemon-details__image')).nativeElement.src).toEqual(pokemon.image);
+  });
+
+  it('navigates to pokemon list after clicking "back" button', () => {
+    fixture.detectChanges();
+
+    fixture.debugElement.query(By.css('.pokemon-details__go-back')).nativeElement.click();
+
+    expect(router.navigate).toHaveBeenCalledWith(['../'], { queryParamsHandling: 'preserve' });
   });
 });

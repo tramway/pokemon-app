@@ -5,10 +5,17 @@ import { HttpClient } from '@angular/common/http';
 import { HttpResponse } from './http-response';
 import { Pokemon } from '../domain/pokemon';
 
+// I could've use wrapper library like https://github.com/Gabb-c/pokenode-ts but I decided to show my approach to situations
+// when there is no such wrapper library
 interface PokemonDetailsResponse {
   id: number;
   name: string;
   sprites: { front_default: string };
+  abilities: {
+    ability: {
+      name: string,
+    },
+  }[],
 }
 
 @Injectable({
@@ -32,8 +39,9 @@ export class HttpPokemonService extends PokemonService {
                 id: rawDetails.id,
                 url: rawPokemon.url,
                 name: rawPokemon.name,
-                image: rawDetails.sprites.front_default
-              }))));
+                image: rawDetails.sprites.front_default,
+                abilitiesNames: rawDetails.abilities.map(ability => ability.ability.name)
+              } as Pokemon))));
           return forkJoin(pokemonDetailsRequests);
         })
       );
@@ -45,7 +53,8 @@ export class HttpPokemonService extends PokemonService {
         id: rawDetails.id,
         url: `https://pokeapi.co/api/v2/pokemon/${ id }`,
         name: rawDetails.name,
-        image: rawDetails.sprites.front_default
+        image: rawDetails.sprites.front_default,
+        abilitiesNames: rawDetails.abilities.map(ability => ability.ability.name)
       })));
   }
 }

@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { PokemonDetailsComponent } from './pokemon-details/pokemon-details.component';
 import { SelectedPokemonService } from './selected-pokemon.service';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   imports: [
@@ -31,7 +32,8 @@ import { SelectedPokemonService } from './selected-pokemon.service';
     MatGridListModule,
     MatCardModule,
     MatRippleModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatButtonModule
   ],
   declarations: [PokemonListComponent, PokemonDetailsComponent],
   providers: [

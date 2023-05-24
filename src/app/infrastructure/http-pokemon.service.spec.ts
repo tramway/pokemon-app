@@ -26,13 +26,15 @@ describe('HttpPokemonService', () => {
           id: 1,
           name: 'bulbasaur',
           url: 'https://pokeapi.co/api/v2/pokemon/1/',
-          image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'
+          image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png',
+          abilitiesNames: ['overgrow']
         },
         {
           id: 25,
           name: 'pikachu',
           url: 'https://pokeapi.co/api/v2/pokemon/25/',
-          image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png'
+          image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png',
+          abilitiesNames: ['static']
         },
       ];
       expect(pokemons).toEqual(expected);
@@ -80,14 +82,6 @@ function bulbasaurDetailsResponse() {
         'is_hidden': false,
         'slot': 1
       },
-      {
-        'ability': {
-          'name': 'chlorophyll',
-          'url': 'https://pokeapi.co/api/v2/ability/34/'
-        },
-        'is_hidden': true,
-        'slot': 3
-      }
     ],
     'base_experience': 64,
     'forms': [
@@ -11530,11 +11524,8 @@ function pikachuDetailsResponse() {
       'ability': { 'name': 'static', 'url': 'https://pokeapi.co/api/v2/ability/9/' },
       'is_hidden': false,
       'slot': 1
-    }, {
-      'ability': { 'name': 'lightning-rod', 'url': 'https://pokeapi.co/api/v2/ability/31/' },
-      'is_hidden': true,
-      'slot': 3
-    }],
+    },
+    ],
     'base_experience': 112,
     'forms': [{ 'name': 'pikachu', 'url': 'https://pokeapi.co/api/v2/pokemon-form/25/' }],
     'game_indices': [{

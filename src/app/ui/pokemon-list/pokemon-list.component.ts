@@ -24,6 +24,7 @@ export class PokemonListComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    // todo if page is refreshed on not first page - paginator is showing "1-10"
     this.pokemons$ = this.activatedRoute.queryParams
       .pipe(
         tap(queryParams => {

@@ -30,13 +30,15 @@ describe('PokemonListComponent', () => {
         id: 1,
         name: 'bulbasaur',
         url: 'https://pokeapi.co/api/v2/pokemon/1/',
-        image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'
+        image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png',
+        abilitiesNames: ['bulbasaursAbility']
       },
       {
         id: 25,
         name: 'pikachu',
         url: 'https://pokeapi.co/api/v2/pokemon/25/',
-        image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png'
+        image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png',
+        abilitiesNames: ['pickachusAbility']
       },
     ];
 
