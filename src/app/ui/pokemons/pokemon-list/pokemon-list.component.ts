@@ -13,6 +13,7 @@ import { PokemonService } from '../../../domain/pokemon.service';
 export class PokemonListComponent implements OnInit {
 
   public pokemons$: Observable<Pokemon[]> = of([]);
+  public pageIndex: number = 0;
 
   constructor(
     private pokemonService: PokemonService,
@@ -22,7 +23,6 @@ export class PokemonListComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    // todo if page is refreshed on not first page - paginator is showing "1-10"
     this.pokemons$ = this.activatedRoute.queryParams
       .pipe(
         tap(queryParams => {
@@ -40,7 +40,10 @@ export class PokemonListComponent implements OnInit {
         }),
         filter(queryParams => queryParams['page']),
         // Here should go some validation of queryParam.page to be Number
-        switchMap(queryParams => this.pokemonService.getPokemons(queryParams['page']))
+        switchMap(queryParams => {
+          this.pageIndex = Number(queryParams['page']);
+          return this.pokemonService.getPokemons(queryParams['page']);
+        })
       );
   }
 

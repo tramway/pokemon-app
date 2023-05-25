@@ -17,6 +17,10 @@ interface PokemonDetailsResponse {
   }[],
 }
 
+interface PokemonListResponse {
+  results: { name: string }[]
+}
+
 interface EvolutionResponseChain {
   evolves_to: EvolutionResponseChain[],
   species: {
@@ -37,17 +41,13 @@ export class HttpPokemonService extends PokemonService {
     super();
   }
 
-  // TODO make it cleaner
   public getPokemons(page: number): Observable<Pokemon[]> {
-    return this.httpClient.get<{
-      results: { name: string, url: string }[]
-    }>(`https://pokeapi.co/api/v2/pokemon?limit=10&offset=${ page * 10 }`)
+    const offset = page * 10;
+    return this.httpClient.get<PokemonListResponse>(`https://pokeapi.co/api/v2/pokemon?limit=10&offset=${ offset }`)
       .pipe(
-        switchMap((rawPokemons: { results: { name: string, url: string }[] }) => {
-          const pokemonDetailsRequests = rawPokemons.results.map(
-            rawPokemon => this.getPokemonDetails(rawPokemon.name));
-          return forkJoin(pokemonDetailsRequests);
-        })
+        switchMap((rawPokemons) => forkJoin(
+          rawPokemons.results.map(rawPokemon => this.getPokemonDetailsByName(rawPokemon.name)))
+        )
       );
   }
 
@@ -68,7 +68,7 @@ export class HttpPokemonService extends PokemonService {
     return this.httpClient.get<PokemonEvolutionResponse>(`https://pokeapi.co/api/v2/evolution-chain/${ id }`)
       .pipe(
         map(rawEvolutions => this.traverseEvolutions(rawEvolutions.chain)),
-        switchMap(evolutionNames => forkJoin(evolutionNames.map(name => this.getPokemonDetails(name)))),
+        switchMap(evolutionNames => forkJoin(evolutionNames.map(name => this.getPokemonDetailsByName(name)))),
         catchError((err: any) => {
           if (err instanceof HttpErrorResponse && err.status == 404) {
             return of([]);
@@ -79,7 +79,7 @@ export class HttpPokemonService extends PokemonService {
       );
   }
 
-  private getPokemonDetails(name: string): Observable<Pokemon> {
+  private getPokemonDetailsByName(name: string): Observable<Pokemon> {
     return this.httpClient.get<PokemonDetailsResponse>(`https://pokeapi.co/api/v2/pokemon/${ name }`)
       .pipe(map(rawDetails => ({
         id: rawDetails.id,
