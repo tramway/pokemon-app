@@ -1,7 +1,3 @@
-<mat-toolbar color="primary">
-  <span class="pokemon-list__header">{{'APP_TITLE' | translate}}</span>
-</mat-toolbar>
-
 <section class="pokemon-list__container">
   <app-pokemon-card
     *ngFor="let pokemon of pokemons$ | async"

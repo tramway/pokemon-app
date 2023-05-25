@@ -14,7 +14,7 @@ export const routes: Routes = [
       },
       {
         path: 'pokemons',
-        loadChildren: () => import('./ui/pokemon-list/pokemon-list.module').then(m => m.PokemonListModule)
+        loadChildren: () => import('./ui/pokemons/pokemons.module').then(m => m.PokemonsModule)
       }
     ]
   }

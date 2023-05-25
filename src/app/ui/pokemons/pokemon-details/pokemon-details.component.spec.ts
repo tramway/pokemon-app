@@ -12,6 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatCardModule } from '@angular/material/card';
 import { PokemonEvolution } from '../../../domain/pokemon-evolution';
+import { PokemonCardComponent } from '../pokemon-card/pokemon-card.component';
 
 describe('PokemonDetailsComponent', () => {
   let fixture: ComponentFixture<PokemonDetailsComponent>;
@@ -24,7 +25,7 @@ describe('PokemonDetailsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [BrowserTestingModule, RouterTestingModule, TranslateModule.forRoot(), MatCardModule],
-      declarations: [PokemonDetailsComponent],
+      declarations: [PokemonDetailsComponent, PokemonCardComponent],
       providers: [
         SelectedPokemonService,
         { provide: PokemonService, useFactory: () => new InMemoryPokemonService([]) },
@@ -53,8 +54,7 @@ describe('PokemonDetailsComponent', () => {
 
     fixture.detectChanges();
 
-    expect(fixture.debugElement.query(By.css('.pokemon-details__name')).nativeElement.innerText.toLowerCase()).toBe(pokemon.name.toLowerCase());
-    expect(fixture.debugElement.query(By.css('.pokemon-details__image')).nativeElement.src).toEqual(pokemon.image);
+    expect(fixture.debugElement.query(By.directive(PokemonCardComponent)).componentInstance.pokemon).toEqual(pokemon);
   });
 
   it('reads pokemon data from PokemonService if not available from SelectedPokemonService', () => {
@@ -71,8 +71,7 @@ describe('PokemonDetailsComponent', () => {
 
     fixture.detectChanges();
 
-    expect(fixture.debugElement.query(By.css('.pokemon-details__name')).nativeElement.innerText.toLowerCase()).toBe(pokemon.name.toLowerCase());
-    expect(fixture.debugElement.query(By.css('.pokemon-details__image')).nativeElement.src).toEqual(pokemon.image);
+    expect(fixture.debugElement.query(By.directive(PokemonCardComponent)).componentInstance.pokemon).toEqual(pokemon);
   });
 
   it('navigates to pokemon list after clicking "back" button', () => {
@@ -110,7 +109,9 @@ describe('PokemonDetailsComponent', () => {
 
     fixture.detectChanges();
 
-    const displayedEvolutionNames: string[] = fixture.debugElement.queryAll(By.css('.pokemon-details__evolution-name')).map(element => element.nativeElement.innerText.toLowerCase());
-    expect(displayedEvolutionNames).toEqual(evolutions.map(evolution => evolution.name.toLowerCase()));
+    evolutions.forEach(evolution => {
+      const allCards = fixture.debugElement.queryAll(By.directive(PokemonCardComponent));
+      expect(allCards.find(element => element.componentInstance.pokemon === evolution)).toBeTruthy();
+    });
   });
 });

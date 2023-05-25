@@ -2,19 +2,19 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PokemonListComponent } from './pokemon-list.component';
 import { By } from '@angular/platform-browser';
-import { PokemonService } from '../../domain/pokemon.service';
-import { InMemoryPokemonService } from '../../infrastructure/in-memory-pokemon.service';
 import { MatPaginator } from '@angular/material/paginator';
-import { PokemonListModule } from './pokemon-list.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { BrowserTestingModule } from '@angular/platform-browser/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Pokemon } from '../../domain/pokemon';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgZone } from '@angular/core';
-import { SelectedPokemonService } from './selected-pokemon.service';
-import { PokemonCardComponent } from './pokemon-card/pokemon-card.component';
 import Spy = jasmine.Spy;
+import { Pokemon } from '../../../domain/pokemon';
+import { SelectedPokemonService } from '../selected-pokemon.service';
+import { PokemonsModule } from '../pokemons.module';
+import { PokemonService } from '../../../domain/pokemon.service';
+import { InMemoryPokemonService } from '../../../infrastructure/in-memory-pokemon.service';
+import { PokemonCardComponent } from '../pokemon-card/pokemon-card.component';
 
 describe('PokemonListComponent', () => {
   let fixture: ComponentFixture<PokemonListComponent>;
@@ -44,7 +44,7 @@ describe('PokemonListComponent', () => {
     ];
 
     await TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot(), PokemonListModule, BrowserTestingModule, RouterTestingModule.withRoutes([
+      imports: [TranslateModule.forRoot(), PokemonsModule, BrowserTestingModule, RouterTestingModule.withRoutes([
         {
           path: '',
           component: PokemonListComponent
@@ -76,14 +76,6 @@ describe('PokemonListComponent', () => {
     fixture.detectChanges();
 
     expect(router.navigate).toHaveBeenCalledWith([], jasmine.objectContaining({ queryParams: { page: 1 } }));
-  });
-
-  it('displays header', async () => {
-    await ngZone.run(async () => await router.navigate(['/'], { queryParams: { page: '1' } }));
-
-    fixture.detectChanges();
-
-    expect(fixture.debugElement.query(By.css('.pokemon-list__header'))).toBeTruthy();
   });
 
   it('displays paginator', () => {

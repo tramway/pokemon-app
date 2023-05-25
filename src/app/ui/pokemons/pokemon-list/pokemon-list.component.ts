@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { PokemonService } from '../../domain/pokemon.service';
 import { filter, Observable, of, switchMap, tap } from 'rxjs';
-import { Pokemon } from '../../domain/pokemon';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SelectedPokemonService } from './selected-pokemon.service';
+import { Pokemon } from '../../../domain/pokemon';
+import { PokemonService } from '../../../domain/pokemon.service';
+import { SelectedPokemonService } from '../selected-pokemon.service';
 
 @Component({
   selector: 'app-pokemon-list',
