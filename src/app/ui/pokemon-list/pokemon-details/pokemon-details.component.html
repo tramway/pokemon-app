@@ -14,6 +14,17 @@
       </ul>
     </mat-card-content>
   </mat-card>
+</section>
 
+<section *ngIf="(pokemonEvolutions$ | async) as evolutions">
+  <b>{{'EVOLUTIONS' | translate}}</b>
+  <div class="pokemon-details__evolutions-container">
+    <mat-card *ngFor="let evolution of evolutions" class="pokemon-details__pokemon-main-info-card">
+      <mat-card-content class="pokemon-details__pokemon-card-content">
+        <b class="pokemon-details__evolution-name">{{evolution.name | titlecase}}</b>
+        <img class="pokemon-details__evolution-image" src="{{evolution.image}}"/>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </section>
 <button mat-raised-button class="pokemon-details__go-back" (click)="goBack()">{{'GO_BACK' | translate}}</button>

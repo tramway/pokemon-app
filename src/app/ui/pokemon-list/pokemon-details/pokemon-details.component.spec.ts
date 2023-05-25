@@ -11,6 +11,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatCardModule } from '@angular/material/card';
+import { PokemonEvolution } from '../../../domain/pokemon-evolution';
 
 describe('PokemonDetailsComponent', () => {
   let fixture: ComponentFixture<PokemonDetailsComponent>;
@@ -80,5 +81,36 @@ describe('PokemonDetailsComponent', () => {
     fixture.debugElement.query(By.css('.pokemon-details__go-back')).nativeElement.click();
 
     expect(router.navigate).toHaveBeenCalledWith(['../'], { queryParamsHandling: 'preserve' });
+  });
+
+  it('evolutions are fetched for pokemon', () => {
+    const evolutions: PokemonEvolution[] = [
+      {
+        name: 'bulbasaur',
+        url: 'https://pokeapi.co/api/v2/pokemon-species/1/',
+        image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'
+      },
+      {
+        name: 'ivysaur',
+        url: 'https://pokeapi.co/api/v2/pokemon-species/2/',
+        image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png'
+      }
+    ];
+    const inMemoryPokemonService: InMemoryPokemonService = new InMemoryPokemonService([{
+        id: 2,
+        name: 'bulbasaur',
+        url: 'https://pokeapi.co/api/v2/pokemon/2/',
+        image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png',
+        abilitiesNames: ['pickachusAbility']
+      }],
+      evolutions);
+    spyOn(pokemonService, 'getPokemon').and.callFake((id: number) => inMemoryPokemonService.getPokemon(id));
+    spyOn(pokemonService, 'getEvolutions').and.callFake((id: number) => inMemoryPokemonService.getEvolutions(id));
+    activatedRoute.snapshot.params = { id: '2' };
+
+    fixture.detectChanges();
+
+    const displayedEvolutionNames: string[] = fixture.debugElement.queryAll(By.css('.pokemon-details__evolution-name')).map(element => element.nativeElement.innerText.toLowerCase());
+    expect(displayedEvolutionNames).toEqual(evolutions.map(evolution => evolution.name.toLowerCase()));
   });
 });

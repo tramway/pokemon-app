@@ -1,0 +1,14 @@
+.pokemon-list__pokemon-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pokemon-list__pokemon-card:hover {
+  cursor: pointer;
+}
+
+.pokemon-list__pokemon-image {
+  pointer-events: none;
+  user-select: none;
+}

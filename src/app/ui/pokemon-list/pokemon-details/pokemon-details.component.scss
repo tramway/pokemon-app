@@ -8,12 +8,16 @@
   margin-bottom: 16px;
 }
 
+.pokemon-details__evolutions-container {
+  display: flex;
+}
+
 .pokemon-details__pokemon-main-info-card {
   width: 150px;
+  margin-right: 8px;
 }
 
 .pokemon-details__pokemon-abilities-card {
-  margin-left: 8px;
   width: 200px;
 
   .pokemon-details__pokemon-card-content {
@@ -32,4 +36,8 @@
 .pokemon-details__image {
   pointer-events: none;
   user-select: none;
+}
+
+.pokemon-details__go-back {
+  margin-top: 16px;
 }

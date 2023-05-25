@@ -3,12 +3,11 @@
 </mat-toolbar>
 
 <section class="pokemon-list__container">
-  <mat-card mat-ripple *ngFor="let pokemon of pokemons$ | async" class="pokemon-list__pokemon-card">
-    <mat-card-content class="pokemon-list__pokemon-card-content" (click)="openDetails(pokemon)">
-      <img src="{{pokemon.image}}" class="pokemon-list__pokemon-image"/>
-      <b class="pokemon-list__pokemon">{{pokemon.name | titlecase}}</b>
-    </mat-card-content>
-  </mat-card>
+  <app-pokemon-card
+    *ngFor="let pokemon of pokemons$ | async"
+    [pokemon]="pokemon"
+    (clicked)="openDetails(pokemon)"
+  ></app-pokemon-card>
 </section>
 
 <mat-paginator

@@ -13,6 +13,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { PokemonDetailsComponent } from './pokemon-details/pokemon-details.component';
 import { SelectedPokemonService } from './selected-pokemon.service';
 import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { PokemonCardComponent } from './pokemon-card/pokemon-card.component';
 
 @NgModule({
   imports: [
@@ -33,9 +35,10 @@ import { MatButtonModule } from '@angular/material/button';
     MatCardModule,
     MatRippleModule,
     MatPaginatorModule,
-    MatButtonModule
+    MatButtonModule,
+    MatInputModule
   ],
-  declarations: [PokemonListComponent, PokemonDetailsComponent],
+  declarations: [PokemonListComponent, PokemonDetailsComponent, PokemonCardComponent],
   providers: [
     SelectedPokemonService,
     { provide: PokemonService, useClass: HttpPokemonService }
