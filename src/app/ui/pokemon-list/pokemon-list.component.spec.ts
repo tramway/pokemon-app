@@ -13,6 +13,7 @@ import { Pokemon } from '../../domain/pokemon';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgZone } from '@angular/core';
 import { SelectedPokemonService } from './selected-pokemon.service';
+import { PokemonCardComponent } from './pokemon-card/pokemon-card.component';
 import Spy = jasmine.Spy;
 
 describe('PokemonListComponent', () => {
@@ -97,12 +98,8 @@ describe('PokemonListComponent', () => {
 
     fixture.detectChanges();
 
-    fixture.debugElement.queryAll(By.css('.pokemon-list__pokemon')).forEach((element, index) => {
-      expect(element.nativeElement.innerText.toLowerCase()).toEqual(mockedPokemons[index].name);
-    });
-
-    fixture.debugElement.queryAll(By.css('.pokemon-list__pokemon-image')).forEach((image, index) => {
-      expect(image.nativeElement.src).toEqual(mockedPokemons[index].image);
+    fixture.debugElement.queryAll(By.directive(PokemonCardComponent)).forEach((element, index) => {
+      expect((element.componentInstance as PokemonCardComponent).pokemon).toEqual(mockedPokemons[index]);
     });
   });
 
@@ -112,9 +109,11 @@ describe('PokemonListComponent', () => {
     fixture.detectChanges();
 
     routerNavigateSpy.calls.reset();
-    fixture.debugElement.queryAll(By.css('.pokemon-list__pokemon-card-content')).at(0)?.nativeElement.click();
+    await ngZone.run(() =>
+      fixture.debugElement.queryAll(By.directive(PokemonCardComponent)).at(0)?.componentInstance.clicked.emit()
+    );
 
-    expect(router.navigate).toHaveBeenCalledWith(['details', 1], jasmine.anything());
     expect(selectedPokemonService.selectPokemon).toHaveBeenCalledWith(mockedPokemons[0]);
+    expect(router.navigate).toHaveBeenCalledWith(['details', 1], jasmine.anything());
   });
 });

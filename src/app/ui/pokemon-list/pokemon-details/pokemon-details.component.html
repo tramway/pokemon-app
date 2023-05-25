@@ -1,10 +1,13 @@
+<mat-toolbar color="primary">
+  <span class="pokemon-list__header">{{'APP_TITLE' | translate}}</span>
+</mat-toolbar>
+
 <section class="pokemon-details__container">
-  <mat-card *ngIf="(pokemon$ | async) as pokemon" class="pokemon-details__pokemon-main-info-card">
-    <mat-card-content class="pokemon-details__pokemon-card-content">
-      <b class="pokemon-details__name">{{pokemon.name | titlecase}}</b>
-      <img class="pokemon-details__image" src="{{pokemon.image}}"/>
-    </mat-card-content>
-  </mat-card>
+  <app-pokemon-card *ngIf="(pokemon$ | async) as pokemon"
+                    [pokemon]="pokemon"
+                    [clickable]="false"
+                    class="pokemon-details__pokemon-main-info-card"
+  ></app-pokemon-card>
 
   <mat-card *ngIf="(pokemon$ | async) as pokemon" class="pokemon-details__pokemon-abilities-card">
     <mat-card-content class="pokemon-details__pokemon-card-content">
@@ -19,12 +22,12 @@
 <section *ngIf="(pokemonEvolutions$ | async) as evolutions">
   <b>{{'EVOLUTIONS' | translate}}</b>
   <div class="pokemon-details__evolutions-container">
-    <mat-card *ngFor="let evolution of evolutions" class="pokemon-details__pokemon-main-info-card">
-      <mat-card-content class="pokemon-details__pokemon-card-content">
-        <b class="pokemon-details__evolution-name">{{evolution.name | titlecase}}</b>
-        <img class="pokemon-details__evolution-image" src="{{evolution.image}}"/>
-      </mat-card-content>
-    </mat-card>
+    <app-pokemon-card
+      *ngFor="let evolution of evolutions"
+      [pokemon]="evolution"
+      class="pokemon-details__pokemon-main-info-card"
+    ></app-pokemon-card>
   </div>
 </section>
+
 <button mat-raised-button class="pokemon-details__go-back" (click)="goBack()">{{'GO_BACK' | translate}}</button>

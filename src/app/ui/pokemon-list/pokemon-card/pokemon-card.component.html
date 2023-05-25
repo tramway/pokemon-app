@@ -1,6 +1,6 @@
-<mat-card *ngIf="pokemon" mat-ripple class="pokemon-list__pokemon-card">
-  <mat-card-content class="pokemon-list__pokemon-card-content" (click)="clicked.emit()">
-    <img src="{{pokemon.image}}" class="pokemon-list__pokemon-image"/>
-    <b class="pokemon-list__pokemon">{{pokemon.name | titlecase}}</b>
+<mat-card *ngIf="pokemon"  class="pokemon-card" >
+  <mat-card-content mat-ripple class="pokemon-card__content" (click)="openDetails()">
+    <img src="{{pokemon.image}}" class="pokemon-card__image"/>
+    <b class="pokemon-card_name" >{{pokemon.name | titlecase}}</b>
   </mat-card-content>
 </mat-card>

@@ -1,14 +1,20 @@
-.pokemon-list__pokemon-card-content {
+:host {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.pokemon-card__content {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.pokemon-list__pokemon-card:hover {
+.pokemon-card:hover {
   cursor: pointer;
 }
 
-.pokemon-list__pokemon-image {
+.pokemon-card__image {
   pointer-events: none;
   user-select: none;
 }
