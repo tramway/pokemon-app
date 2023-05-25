@@ -10,7 +10,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { PokemonDetailsComponent } from './pokemon-details/pokemon-details.component';
-import { SelectedPokemonService } from './selected-pokemon.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { PokemonCardComponent } from './pokemon-card/pokemon-card.component';
@@ -47,7 +46,6 @@ import { PokemonListComponent } from './pokemon-list/pokemon-list.component';
   ],
   declarations: [PokemonListComponent, PokemonDetailsComponent, PokemonCardComponent, PokemonsComponent],
   providers: [
-    SelectedPokemonService,
     { provide: PokemonService, useClass: HttpPokemonService }
   ]
 })

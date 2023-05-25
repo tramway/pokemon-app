@@ -4,7 +4,6 @@ import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Pokemon } from '../../../domain/pokemon';
 import { PokemonService } from '../../../domain/pokemon.service';
-import { SelectedPokemonService } from '../selected-pokemon.service';
 
 @Component({
   selector: 'app-pokemon-list',
@@ -19,7 +18,6 @@ export class PokemonListComponent implements OnInit {
     private pokemonService: PokemonService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private selectedPokemonService: SelectedPokemonService
   ) {
   }
 
@@ -57,7 +55,6 @@ export class PokemonListComponent implements OnInit {
   }
 
   public openDetails(pokemon: Pokemon): void {
-    this.selectedPokemonService.selectPokemon(pokemon);
     this.router.navigate(['details', pokemon.id], {
       relativeTo: this.activatedRoute,
       queryParamsHandling: 'preserve',

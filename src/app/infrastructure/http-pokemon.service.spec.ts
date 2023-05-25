@@ -59,16 +59,19 @@ describe('HttpPokemonService', () => {
     service.getEvolutions(1).subscribe(pokemons => {
       const expected: PokemonEvolution[] = [
         {
+          id: 1,
           name: 'bulbasaur',
           url: 'https://pokeapi.co/api/v2/pokemon/bulbasaur/',
           image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/bulbasaur.png'
         },
         {
+          id: 1,
           name: 'ivysaur',
           url: 'https://pokeapi.co/api/v2/pokemon/ivysaur/',
           image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/ivysaur.png'
         },
         {
+          id: 1,
           name: 'venusaur',
           url: 'https://pokeapi.co/api/v2/pokemon/venusaur/',
           image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/venusaur.png'

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PokemonService } from '../domain/pokemon.service';
-import { forkJoin, map, Observable, switchMap } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { catchError, forkJoin, map, Observable, of, switchMap, throwError } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Pokemon } from '../domain/pokemon';
 import { PokemonEvolution } from '../domain/pokemon-evolution';
 
@@ -74,17 +74,25 @@ export class HttpPokemonService extends PokemonService {
             this.getPokemonDetails(name).pipe(map(details => ({
               name: details.name,
               image: details.image,
-              url: details.url
+              url: details.url,
+              id: details.id
             })))
           ))),
+        catchError((err: any) => {
+          if (err instanceof HttpErrorResponse && err.status == 404) {
+            return of([]);
+          }
+
+          return throwError(err);
+        })
       );
   }
 
   private getPokemonDetails(name: string): Observable<Pokemon> {
-    return this.httpClient.get<PokemonDetailsResponse>(`https://pokeapi.co/api/v2/pokemon/${name}`)
+    return this.httpClient.get<PokemonDetailsResponse>(`https://pokeapi.co/api/v2/pokemon/${ name }`)
       .pipe(map(rawDetails => ({
         id: rawDetails.id,
-        url: `https://pokeapi.co/api/v2/pokemon/${name}/`,
+        url: `https://pokeapi.co/api/v2/pokemon/${ name }/`,
         name: rawDetails.name,
         image: rawDetails.sprites.front_default,
         abilitiesNames: rawDetails.abilities.map(ability => ability.ability.name)

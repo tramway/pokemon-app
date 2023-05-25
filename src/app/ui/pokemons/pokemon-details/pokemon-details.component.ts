@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Pokemon } from '../../../domain/pokemon';
-import { Observable, of, race, shareReplay, switchMap } from 'rxjs';
-import { SelectedPokemonService } from '../selected-pokemon.service';
+import { Observable, switchMap } from 'rxjs';
 import { PokemonService } from '../../../domain/pokemon.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PokemonEvolution } from '../../../domain/pokemon-evolution';
@@ -17,7 +16,6 @@ export class PokemonDetailsComponent implements OnInit {
   public pokemonEvolutions$: Observable<PokemonEvolution[] | undefined> | undefined;
 
   constructor(
-    private selectedPokemonService: SelectedPokemonService,
     private pokemonService: PokemonService,
     private router: Router,
     private activatedRoute: ActivatedRoute
@@ -25,18 +23,20 @@ export class PokemonDetailsComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.pokemon$ = race([
-      this.selectedPokemonService.getPokemon(),
-      this.pokemonService.getPokemon(Number(this.activatedRoute.snapshot.params['id']))
-    ]).pipe(shareReplay(1));
+    this.pokemon$ = this.activatedRoute.params.pipe(switchMap((params) => this.pokemonService.getPokemon(Number(params['id']))));
 
-    this.pokemonEvolutions$ = this.pokemon$.pipe(
-      switchMap((pokemon) => pokemon ? this.pokemonService.getEvolutions(pokemon.id) : of([])),
+    this.pokemonEvolutions$ = this.activatedRoute.params.pipe(
+      switchMap((params) => this.pokemonService.getEvolutions(Number(params['id']))),
     );
   }
 
-  // todo go back should be absolute
   public goBack(): void {
-    this.router.navigate(['../'], { queryParamsHandling: 'preserve' });
+    this.router.navigate(['/pokemons'], { queryParamsHandling: 'preserve' });
+  }
+
+  public openDetails(evolution: PokemonEvolution): void {
+    this.router.navigate([`/pokemons/details/${ evolution.id }`], {
+      queryParamsHandling: 'merge'
+    });
   }
 }
