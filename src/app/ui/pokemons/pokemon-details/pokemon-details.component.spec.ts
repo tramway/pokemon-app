@@ -10,7 +10,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatCardModule } from '@angular/material/card';
-import { PokemonEvolution } from '../../../domain/pokemon-evolution';
 import { PokemonCardComponent } from '../pokemon-card/pokemon-card.component';
 import { of } from 'rxjs';
 
@@ -65,18 +64,20 @@ describe('PokemonDetailsComponent', () => {
   });
 
   it('evolutions are fetched for pokemon', () => {
-    const evolutions: PokemonEvolution[] = [
+    const evolutions: Pokemon[] = [
       {
         id: 2,
         name: 'bulbasaur',
         url: 'https://pokeapi.co/api/v2/pokemon-species/1/',
-        image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'
+        image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png',
+        abilitiesNames: []
       },
       {
         id: 3,
         name: 'ivysaur',
         url: 'https://pokeapi.co/api/v2/pokemon-species/2/',
-        image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png'
+        image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png',
+        abilitiesNames: []
       }
     ];
     const inMemoryPokemonService: InMemoryPokemonService = new InMemoryPokemonService([{
@@ -99,12 +100,13 @@ describe('PokemonDetailsComponent', () => {
   });
 
   it('clicking on evolution navigates to details', () => {
-    const evolutions: PokemonEvolution[] = [
+    const evolutions: Pokemon[] = [
       {
         id: 25,
         name: 'bulbasaur',
         url: 'https://pokeapi.co/api/v2/pokemon-species/1/',
-        image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'
+        image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png',
+        abilitiesNames: []
       },
     ];
     const inMemoryPokemonService: InMemoryPokemonService = new InMemoryPokemonService([{

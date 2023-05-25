@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpPokemonService } from './http-pokemon.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpClient } from '@angular/common/http';
-import { PokemonEvolution } from '../domain/pokemon-evolution';
+import { Pokemon } from '../domain/pokemon';
 
 describe('HttpPokemonService', () => {
   let service: HttpPokemonService;
@@ -57,24 +57,27 @@ describe('HttpPokemonService', () => {
 
   it('should fetch recursive tree of evolutions and flat it', (done) => {
     service.getEvolutions(1).subscribe(pokemons => {
-      const expected: PokemonEvolution[] = [
+      const expected: Pokemon[] = [
         {
           id: 1,
           name: 'bulbasaur',
           url: 'https://pokeapi.co/api/v2/pokemon/bulbasaur/',
-          image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/bulbasaur.png'
+          image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/bulbasaur.png',
+          abilitiesNames: ['bulbasaur-ability']
         },
         {
           id: 1,
           name: 'ivysaur',
           url: 'https://pokeapi.co/api/v2/pokemon/ivysaur/',
-          image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/ivysaur.png'
+          image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/ivysaur.png',
+          abilitiesNames: ['ivysaur-ability']
         },
         {
           id: 1,
           name: 'venusaur',
           url: 'https://pokeapi.co/api/v2/pokemon/venusaur/',
-          image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/venusaur.png'
+          image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/venusaur.png',
+          abilitiesNames: ['venusaur-ability']
         }
       ];
       expect(pokemons).toEqual(expected);
@@ -137,7 +140,7 @@ function pokemonDetailsResponse(name: string) {
     'past_types': [],
     'species': {
       'name': name,
-      'url': `https://pokeapi.co/api/v2/pokemon-species/${name}/`
+      'url': `https://pokeapi.co/api/v2/pokemon-species/${ name }/`
     },
     'sprites': {
       'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png',

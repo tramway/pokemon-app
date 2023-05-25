@@ -3,7 +3,6 @@ import { PokemonService } from '../domain/pokemon.service';
 import { catchError, forkJoin, map, Observable, of, switchMap, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Pokemon } from '../domain/pokemon';
-import { PokemonEvolution } from '../domain/pokemon-evolution';
 
 // I could've use wrapper library like https://github.com/Gabb-c/pokenode-ts but I decided to show my approach to situations
 // when there is no such wrapper library
@@ -65,19 +64,11 @@ export class HttpPokemonService extends PokemonService {
       );
   }
 
-  public getEvolutions(id: Pokemon['id']): Observable<PokemonEvolution[] | undefined> {
+  public getEvolutions(id: Pokemon['id']): Observable<Pokemon[] | undefined> {
     return this.httpClient.get<PokemonEvolutionResponse>(`https://pokeapi.co/api/v2/evolution-chain/${ id }`)
       .pipe(
         map(rawEvolutions => this.traverseEvolutions(rawEvolutions.chain)),
-        switchMap(evolutionNames =>
-          forkJoin(evolutionNames.map(name =>
-            this.getPokemonDetails(name).pipe(map(details => ({
-              name: details.name,
-              image: details.image,
-              url: details.url,
-              id: details.id
-            })))
-          ))),
+        switchMap(evolutionNames => forkJoin(evolutionNames.map(name => this.getPokemonDetails(name)))),
         catchError((err: any) => {
           if (err instanceof HttpErrorResponse && err.status == 404) {
             return of([]);

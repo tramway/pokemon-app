@@ -3,7 +3,6 @@ import { Pokemon } from '../../../domain/pokemon';
 import { Observable, switchMap } from 'rxjs';
 import { PokemonService } from '../../../domain/pokemon.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PokemonEvolution } from '../../../domain/pokemon-evolution';
 
 @Component({
   selector: 'app-pokemon-details',
@@ -13,7 +12,7 @@ import { PokemonEvolution } from '../../../domain/pokemon-evolution';
 export class PokemonDetailsComponent implements OnInit {
 
   public pokemon$: Observable<Pokemon | undefined> | undefined;
-  public pokemonEvolutions$: Observable<PokemonEvolution[] | undefined> | undefined;
+  public pokemonEvolutions$: Observable<Pokemon[] | undefined> | undefined;
 
   constructor(
     private pokemonService: PokemonService,
@@ -34,7 +33,7 @@ export class PokemonDetailsComponent implements OnInit {
     this.router.navigate(['/pokemons'], { queryParamsHandling: 'preserve' });
   }
 
-  public openDetails(evolution: PokemonEvolution): void {
+  public openDetails(evolution: Pokemon): void {
     this.router.navigate([`/pokemons/details/${ evolution.id }`], {
       queryParamsHandling: 'merge'
     });

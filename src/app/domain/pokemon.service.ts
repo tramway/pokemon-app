@@ -1,6 +1,5 @@
 import { Pokemon } from './pokemon';
 import { Observable } from 'rxjs';
-import { PokemonEvolution } from './pokemon-evolution';
 
 export abstract class PokemonService {
 
@@ -8,5 +7,5 @@ export abstract class PokemonService {
 
   abstract getPokemon(id: Pokemon['id']): Observable<Pokemon | undefined>;
 
-  abstract getEvolutions(id: Pokemon['id']): Observable<PokemonEvolution[] | undefined>;
+  abstract getEvolutions(id: Pokemon['id']): Observable<Pokemon[] | undefined>;
 }

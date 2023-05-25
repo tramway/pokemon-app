@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Pokemon } from '../../../domain/pokemon';
-import { PokemonEvolution } from '../../../domain/pokemon-evolution';
 
 @Component({
   selector: 'app-pokemon-card',
@@ -10,7 +9,7 @@ import { PokemonEvolution } from '../../../domain/pokemon-evolution';
 export class PokemonCardComponent {
 
   @Input()
-  public pokemon: Pokemon | PokemonEvolution | undefined;
+  public pokemon: Pokemon | undefined;
 
   @Input()
   public clickable: boolean = true;
