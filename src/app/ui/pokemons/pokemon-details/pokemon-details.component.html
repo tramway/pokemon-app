@@ -1,7 +1,7 @@
 <section class="pokemon-details__container">
   <app-pokemon-card *ngIf="(pokemon$ | async) as pokemon"
-                    [pokemon]="pokemon"
                     [clickable]="false"
+                    [pokemon]="pokemon"
                     class="pokemon-details__pokemon-main-info-card"
   ></app-pokemon-card>
 
@@ -19,12 +19,12 @@
   <b>{{'EVOLUTIONS' | translate}}</b>
   <div class="pokemon-details__evolutions-container">
     <app-pokemon-card
+      (click)="openDetails(evolution)"
       *ngFor="let evolution of evolutions"
       [pokemon]="evolution"
       class="pokemon-details__pokemon-main-info-card"
-      (click)="openDetails(evolution)"
     ></app-pokemon-card>
   </div>
 </section>
 
-<button mat-raised-button class="pokemon-details__go-back" (click)="goBack()">{{'GO_BACK' | translate}}</button>
+<button (click)="goBack()" class="pokemon-details__go-back" mat-raised-button>{{'GO_BACK' | translate}}</button>

@@ -8,12 +8,12 @@ import { BrowserTestingModule } from '@angular/platform-browser/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgZone } from '@angular/core';
-import Spy = jasmine.Spy;
 import { Pokemon } from '../../../domain/pokemon';
 import { PokemonsModule } from '../pokemons.module';
 import { PokemonService } from '../../../domain/pokemon.service';
 import { InMemoryPokemonService } from '../../../infrastructure/in-memory-pokemon.service';
 import { PokemonCardComponent } from '../pokemon-card/pokemon-card.component';
+import Spy = jasmine.Spy;
 
 describe('PokemonListComponent', () => {
   let fixture: ComponentFixture<PokemonListComponent>;
