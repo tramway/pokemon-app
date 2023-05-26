@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { PokemonService } from '../domain/pokemon.service';
 import { catchError, forkJoin, map, Observable, of, switchMap, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Pokemon } from '../domain/pokemon';
+import { Pokemon, Pokemons } from '../domain/pokemon';
 
 // I could've use wrapper library like https://github.com/Gabb-c/pokenode-ts but I decided to show my approach to situations
 // when there is no such wrapper library
@@ -18,7 +18,8 @@ interface PokemonDetailsResponse {
 }
 
 interface PokemonListResponse {
-  results: { name: string }[]
+  count: number;
+  results: { name: string }[];
 }
 
 interface EvolutionResponseChain {
@@ -41,12 +42,13 @@ export class HttpPokemonService extends PokemonService {
     super();
   }
 
-  public getPokemons(page: number): Observable<Pokemon[]> {
+  public getPokemons(page: number): Observable<Pokemons> {
     const offset = page * 10;
     return this.httpClient.get<PokemonListResponse>(`https://pokeapi.co/api/v2/pokemon?limit=10&offset=${ offset }`)
       .pipe(
         switchMap((rawPokemons) => forkJoin(
-          rawPokemons.results.map(rawPokemon => this.getPokemonDetailsByName(rawPokemon.name)))
+            rawPokemons.results.map(rawPokemon => this.getPokemonDetailsByName(rawPokemon.name))
+          ).pipe(map((pokemons) => ({ count: rawPokemons.count, pokemons })))
         )
       );
   }

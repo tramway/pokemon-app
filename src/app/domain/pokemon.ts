@@ -5,3 +5,8 @@ export interface Pokemon {
   image: string;
   abilitiesNames: string[];
 }
+
+export interface Pokemons {
+  count: number,
+  pokemons: Pokemon[]
+}

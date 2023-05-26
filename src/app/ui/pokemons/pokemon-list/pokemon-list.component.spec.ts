@@ -70,10 +70,12 @@ describe('PokemonListComponent', () => {
 
     fixture.detectChanges();
 
-    expect(router.navigate).toHaveBeenCalledWith([], jasmine.objectContaining({ queryParams: { page: 1 } }));
+    expect(router.navigate).toHaveBeenCalledWith([], jasmine.objectContaining({ queryParams: { page: 0 } }));
   });
 
-  it('displays paginator', () => {
+  it('displays paginator', async () => {
+    await ngZone.run(async () => await router.navigate(['/'], { queryParams: { page: '1' } }));
+
     fixture.detectChanges();
 
     const paginator = fixture.debugElement.query(By.directive(MatPaginator)).componentInstance as MatPaginator;

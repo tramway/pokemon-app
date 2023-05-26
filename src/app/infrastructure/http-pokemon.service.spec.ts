@@ -22,20 +22,23 @@ describe('HttpPokemonService', () => {
 
   it('should fetch list of pokemons and details', (done) => {
     service.getPokemons(1).subscribe(pokemons => {
-      const expected = [
-        jasmine.objectContaining({
-          name: 'bulbasaur',
-          url: 'https://pokeapi.co/api/v2/pokemon/bulbasaur/',
-          image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/bulbasaur.png',
-          abilitiesNames: ['bulbasaur-ability']
-        }),
-        jasmine.objectContaining({
-          name: 'pikachu',
-          url: 'https://pokeapi.co/api/v2/pokemon/pikachu/',
-          image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/pikachu.png',
-          abilitiesNames: ['pikachu-ability']
-        }),
-      ];
+      const expected = {
+        count: 2,
+        pokemons: [
+          jasmine.objectContaining({
+            name: 'bulbasaur',
+            url: 'https://pokeapi.co/api/v2/pokemon/bulbasaur/',
+            image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/bulbasaur.png',
+            abilitiesNames: ['bulbasaur-ability']
+          }),
+          jasmine.objectContaining({
+            name: 'pikachu',
+            url: 'https://pokeapi.co/api/v2/pokemon/pikachu/',
+            image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/pikachu.png',
+            abilitiesNames: ['pikachu-ability']
+          }),
+        ]
+      };
       expect(pokemons).toEqual(expected);
       done();
     });
@@ -100,10 +103,10 @@ describe('HttpPokemonService', () => {
 
 function pokemonsListResponse() {
   return {
-    'count': 1281,
-    'next': 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=1',
-    'previous': null,
-    'results': [
+    count: 2,
+    next: 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=1',
+    previous: null,
+    results: [
       { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1/' },
       { name: 'pikachu', url: 'https://pokeapi.co/api/v2/pokemon/25/' }
     ]

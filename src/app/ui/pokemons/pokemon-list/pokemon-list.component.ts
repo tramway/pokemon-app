@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { filter, Observable, of, switchMap, tap } from 'rxjs';
+import { filter, Observable, switchMap, tap } from 'rxjs';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Pokemon } from '../../../domain/pokemon';
+import { Pokemon, Pokemons } from '../../../domain/pokemon';
 import { PokemonService } from '../../../domain/pokemon.service';
 
 @Component({
@@ -12,7 +12,7 @@ import { PokemonService } from '../../../domain/pokemon.service';
 })
 export class PokemonListComponent implements OnInit {
 
-  public pokemons$: Observable<Pokemon[]> = of([]);
+  public pokemons$: Observable<Pokemons> | undefined;
   public pageIndex: number = 0;
 
   constructor(
@@ -33,7 +33,7 @@ export class PokemonListComponent implements OnInit {
             [],
             {
               relativeTo: this.activatedRoute,
-              queryParams: { page: 1 },
+              queryParams: { page: 0 },
               queryParamsHandling: 'merge',
             }
           );

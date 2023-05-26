@@ -1,16 +1,18 @@
-<section class="pokemon-list__container">
-  <app-pokemon-card
-    *ngFor="let pokemon of pokemons$ | async"
-    [pokemon]="pokemon"
-    (clicked)="openDetails(pokemon)"
-  ></app-pokemon-card>
-</section>
+<ng-container *ngIf="pokemons$ | async as pokemons">
+  <section class="pokemon-list__container">
+    <app-pokemon-card
+      *ngFor="let pokemon of pokemons.pokemons"
+      [pokemon]="pokemon"
+      (clicked)="openDetails(pokemon)"
+    ></app-pokemon-card>
+  </section>
 
-<mat-paginator
-  [pageIndex]="pageIndex"
-  [length]="100"
-  [pageSize]="10"
-  (page)="changePage($event)"
-  aria-label="Select page"
->
-</mat-paginator>
+  <mat-paginator
+    [pageIndex]="pageIndex"
+    [length]="pokemons.count"
+    [pageSize]="10"
+    (page)="changePage($event)"
+    aria-label="Select page"
+  >
+  </mat-paginator>
+</ng-container>
