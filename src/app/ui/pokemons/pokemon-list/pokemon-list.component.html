@@ -1,0 +1,18 @@
+<ng-container *ngIf="pokemons$ | async as pokemons">
+  <section class="pokemon-list__container">
+    <app-pokemon-card
+      (clicked)="openDetails(pokemon)"
+      *ngFor="let pokemon of pokemons.pokemons"
+      [pokemon]="pokemon"
+    ></app-pokemon-card>
+  </section>
+
+  <mat-paginator
+    (page)="changePage($event)"
+    [length]="pokemons.count"
+    [pageIndex]="pageIndex"
+    [pageSize]="10"
+    aria-label="Select page"
+  >
+  </mat-paginator>
+</ng-container>

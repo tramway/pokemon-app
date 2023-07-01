@@ -1,0 +1,43 @@
+:host {
+  display: block;
+  padding: 16px;
+}
+
+.pokemon-details__container {
+  display: flex;
+  margin-bottom: 16px;
+}
+
+.pokemon-details__evolutions-container {
+  display: flex;
+}
+
+.pokemon-details__pokemon-main-info-card {
+  width: 150px;
+  margin-right: 8px;
+}
+
+.pokemon-details__pokemon-abilities-card {
+  width: 200px;
+
+  .pokemon-details__pokemon-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.pokemon-details__pokemon-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pokemon-details__image {
+  pointer-events: none;
+  user-select: none;
+}
+
+.pokemon-details__go-back {
+  margin-top: 16px;
+}

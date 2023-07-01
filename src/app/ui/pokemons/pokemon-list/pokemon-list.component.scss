@@ -1,0 +1,13 @@
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+.pokemon-list__container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  row-gap: 16px;
+  column-gap: 16px;
+  padding: 16px;
+}
+
