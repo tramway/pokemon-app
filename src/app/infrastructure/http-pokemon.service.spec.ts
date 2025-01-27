@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 
 import { HttpPokemonService } from './http-pokemon.service';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { HttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { Pokemon } from '../domain/pokemon';
 
 describe('HttpPokemonService', () => {
@@ -12,8 +12,7 @@ describe('HttpPokemonService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [HttpPokemonService]
+      providers: [HttpPokemonService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
     });
     service = TestBed.inject(HttpPokemonService);
     httpClient = TestBed.inject(HttpClient);
@@ -118,7 +117,7 @@ function pokemonDetailsResponse(name: string) {
     abilities: [
       {
         ability: {
-          name: `${ name }-ability`,
+          name: `${name}-ability`,
         },
       },
     ],
@@ -128,7 +127,7 @@ function pokemonDetailsResponse(name: string) {
       name: name,
     },
     sprites: {
-      front_default: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${ name }.png`,
+      front_default: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${name}.png`,
     }
   };
 }

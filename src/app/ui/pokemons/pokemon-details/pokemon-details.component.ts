@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Pokemon } from '../../../domain/pokemon';
 import { Observable, switchMap } from 'rxjs';
 import { PokemonService } from '../../../domain/pokemon.service';
@@ -7,12 +7,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-pokemon-details',
   templateUrl: './pokemon-details.component.html',
-  styleUrls: ['./pokemon-details.component.scss']
+  styleUrls: ['./pokemon-details.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PokemonDetailsComponent implements OnInit {
 
-  public pokemon$: Observable<Pokemon | undefined> | undefined;
-  public pokemonEvolutions$: Observable<Pokemon[] | undefined> | undefined;
+  public pokemon$: Observable<Pokemon|undefined>|undefined;
+  public pokemonEvolutions$: Observable<Pokemon[]|undefined>|undefined;
 
   constructor(
     private pokemonService: PokemonService,
@@ -34,7 +35,7 @@ export class PokemonDetailsComponent implements OnInit {
   }
 
   public openDetails(evolution: Pokemon): void {
-    this.router.navigate([`/pokemons/details/${ evolution.id }`], {
+    this.router.navigate([`/pokemons/details/${evolution.id}`], {
       queryParamsHandling: 'merge'
     });
   }

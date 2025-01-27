@@ -4,14 +4,14 @@ import { PokemonsComponent } from './pokemons.component';
 import { By } from '@angular/platform-browser';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { TranslateModule } from '@ngx-translate/core';
-import { RouterTestingModule } from '@angular/router/testing';
+import { RouterModule } from '@angular/router';
 
 describe('PokemonsComponent', () => {
   let fixture: ComponentFixture<PokemonsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot(), MatToolbarModule, RouterTestingModule],
+      imports: [TranslateModule.forRoot(), MatToolbarModule, RouterModule.forRoot([])],
       declarations: [PokemonsComponent],
     }).compileComponents();
 

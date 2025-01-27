@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { filter, Observable, switchMap, tap } from 'rxjs';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,10 +9,11 @@ import { PokemonService } from '../../../domain/pokemon.service';
   selector: 'app-pokemon-list',
   templateUrl: './pokemon-list.component.html',
   styleUrls: ['./pokemon-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PokemonListComponent implements OnInit {
 
-  public pokemons$: Observable<Pokemons> | undefined;
+  public pokemons$: Observable<Pokemons>|undefined;
   public pageIndex: number = 0;
 
   constructor(
@@ -26,7 +27,7 @@ export class PokemonListComponent implements OnInit {
     this.pokemons$ = this.activatedRoute.queryParams
       .pipe(
         tap(queryParams => {
-          if (queryParams['page']) {
+          if(queryParams['page']) {
             return;
           }
           this.router.navigate(
@@ -39,7 +40,6 @@ export class PokemonListComponent implements OnInit {
           );
         }),
         filter(queryParams => queryParams['page']),
-        // Here should go some validation of queryParam.page to be Number
         switchMap(queryParams => {
           this.pageIndex = Number(queryParams['page']);
           return this.pokemonService.getPokemons(queryParams['page']);

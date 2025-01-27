@@ -6,8 +6,7 @@ import { By } from '@angular/platform-browser';
 import { BrowserTestingModule } from '@angular/platform-browser/testing';
 import { PokemonService } from '../../../domain/pokemon.service';
 import { InMemoryPokemonService } from '../../../infrastructure/in-memory-pokemon.service';
-import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatCardModule } from '@angular/material/card';
 import { PokemonCardComponent } from '../pokemon-card/pokemon-card.component';
@@ -18,11 +17,10 @@ describe('PokemonDetailsComponent', () => {
   let pokemonService: PokemonService;
   let pokemon: Pokemon;
   let router: Router;
-  let activatedRoute: ActivatedRoute;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BrowserTestingModule, RouterTestingModule, TranslateModule.forRoot(), MatCardModule],
+      imports: [BrowserTestingModule, RouterModule.forRoot([]), TranslateModule.forRoot(), MatCardModule],
       declarations: [PokemonDetailsComponent, PokemonCardComponent],
       providers: [
         { provide: PokemonService, useFactory: () => new InMemoryPokemonService([]) },
@@ -32,7 +30,6 @@ describe('PokemonDetailsComponent', () => {
 
     pokemonService = TestBed.inject(PokemonService);
     router = TestBed.inject(Router);
-    activatedRoute = TestBed.inject(ActivatedRoute);
 
     spyOn(router, 'navigate');
 
@@ -52,7 +49,7 @@ describe('PokemonDetailsComponent', () => {
 
     fixture.detectChanges();
 
-    expect(fixture.debugElement.query(By.directive(PokemonCardComponent)).componentInstance.pokemon).toEqual(pokemon);
+    expect(fixture.debugElement.query(By.directive(PokemonCardComponent)).componentInstance.pokemon()).toEqual(pokemon);
   });
 
   it('navigates to pokemon list after clicking "back" button', () => {
@@ -95,7 +92,7 @@ describe('PokemonDetailsComponent', () => {
 
     evolutions.forEach(evolution => {
       const allCards = fixture.debugElement.queryAll(By.directive(PokemonCardComponent));
-      expect(allCards.find(element => element.componentInstance.pokemon === evolution)).toBeTruthy();
+      expect(allCards.find(element => element.componentInstance.pokemon() === evolution)).toBeTruthy();
     });
   });
 
@@ -123,6 +120,6 @@ describe('PokemonDetailsComponent', () => {
 
     fixture.debugElement.query(By.css('.pokemon-details__evolutions-container .pokemon-details__pokemon-main-info-card')).nativeElement.click();
 
-    expect(router.navigate).toHaveBeenCalledWith([`/pokemons/details/${ evolutions[0].id }`], { queryParamsHandling: 'merge' });
+    expect(router.navigate).toHaveBeenCalledWith([`/pokemons/details/${evolutions[0].id}`], { queryParamsHandling: 'merge' });
   });
 });

@@ -5,23 +5,20 @@ import { By } from '@angular/platform-browser';
 import { MatPaginator } from '@angular/material/paginator';
 import { TranslateModule } from '@ngx-translate/core';
 import { BrowserTestingModule } from '@angular/platform-browser/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { NgZone } from '@angular/core';
 import { Pokemon } from '../../../domain/pokemon';
 import { PokemonsModule } from '../pokemons.module';
 import { PokemonService } from '../../../domain/pokemon.service';
 import { InMemoryPokemonService } from '../../../infrastructure/in-memory-pokemon.service';
 import { PokemonCardComponent } from '../pokemon-card/pokemon-card.component';
-import Spy = jasmine.Spy;
 
 describe('PokemonListComponent', () => {
   let fixture: ComponentFixture<PokemonListComponent>;
-  let activatedRoute: ActivatedRoute;
   let router: Router;
   let mockedPokemons: Pokemon[];
   let ngZone: NgZone;
-  let routerNavigateSpy: Spy<Router['navigate']>;
+  let routerNavigateSpy: jasmine.Spy<Router['navigate']>;
 
   beforeEach(async () => {
     mockedPokemons = [
@@ -42,7 +39,7 @@ describe('PokemonListComponent', () => {
     ];
 
     await TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot(), PokemonsModule, BrowserTestingModule, RouterTestingModule.withRoutes([
+      imports: [TranslateModule.forRoot(), PokemonsModule, BrowserTestingModule, RouterModule.forRoot([
         {
           path: '',
           component: PokemonListComponent
@@ -55,7 +52,6 @@ describe('PokemonListComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(PokemonListComponent);
-    activatedRoute = TestBed.inject(ActivatedRoute);
     router = TestBed.inject(Router);
     ngZone = TestBed.inject(NgZone);
     const pokemonService = TestBed.inject(PokemonService);
@@ -88,7 +84,7 @@ describe('PokemonListComponent', () => {
     fixture.detectChanges();
 
     fixture.debugElement.queryAll(By.directive(PokemonCardComponent)).forEach((element, index) => {
-      expect((element.componentInstance as PokemonCardComponent).pokemon).toEqual(mockedPokemons[index]);
+      expect((element.componentInstance as PokemonCardComponent).pokemon()).toEqual(mockedPokemons[index]);
     });
   });
 
